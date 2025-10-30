@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
@@ -67,7 +68,9 @@ export const removeFromCart = createAsyncThunk(
     async ({ productId }, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${API_URL}/api/cart/remove-cart`, { productId }, { withCredentials: true })
-            console.log(response.data.message)
+            if(response.data.cart){
+                toast.error("Product removed from cart successfully");
+            }
             return response.data.cart.products;
         }
         catch (err) {
