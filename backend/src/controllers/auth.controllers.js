@@ -16,8 +16,13 @@ async function registerUser(req, res) {
             email,
             password: hashedPassword
         })
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.cookie("token", token)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET,{expiresIn:'7d'});
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // true only in production
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        })
         return res.status(201).json({ message: "User registered successfully", user: { id: user._id, fullname: user.fullname, email: user.email } });
 
     }
@@ -38,8 +43,13 @@ async function loginUser(req, res) {
         if (!isPasswordValid) {
             return res.status(400).json({ message: "Invalid email or password" })
         }
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
-        res.cookie("token", token)
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET,{expiresIn:'7d'});
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // true only in production
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
         return res.status(200).json({ message: "Login successful", user: { id: user._id, fullname: user.fullname, email: user.email } })
 
     }
@@ -75,23 +85,23 @@ async function logoutUser(req, res) {
     }
 }
 
-async function editUser (req,res){
-    try{
+async function editUser(req, res) {
+    try {
         const user = req.user
-        const {fullname:{firstname,lastname},email,} = req.body
-        const newUser = await userModel.findByIdAndUpdate(user._id,{
-            fullname:{firstname,lastname},
+        const { fullname: { firstname, lastname }, email, } = req.body
+        const newUser = await userModel.findByIdAndUpdate(user._id, {
+            fullname: { firstname, lastname },
             email
-        },{new:true}).select("-password")
-        return res.status(200).json({message:"User updated successfully", user:newUser})
+        }, { new: true }).select("-password")
+        return res.status(200).json({ message: "User updated successfully", user: newUser })
     }
-    catch(err){
+    catch (err) {
         return res.status(500).json({ message: "Internal server error" });
     }
 }
 
 
 module.exports = {
-    registerUser, loginUser, verifyUser, logoutUser,editUser
+    registerUser, loginUser, verifyUser, logoutUser, editUser
 }
 
