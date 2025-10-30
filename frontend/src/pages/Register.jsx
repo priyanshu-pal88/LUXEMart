@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 const Register = () => {
   const navigate = useNavigate()
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm()
@@ -11,7 +13,7 @@ const Register = () => {
   const submitHandler = async (user) => {
     const {firstname, lastname, email, password} = user
     try {
-      await axios.post("http://localhost:3000/api/auth/register", { 
+      await axios.post(`${API_URL}/api/auth/register`, { 
         fullname: { firstname, lastname }, 
         email, 
         password 

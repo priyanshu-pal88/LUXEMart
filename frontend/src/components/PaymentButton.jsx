@@ -1,12 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 function PaymentButton() {
   const handlePayment = async () => {
     try {
       // Create order for entire cart
       const { data: order } = await axios.post(
-        'http://localhost:3000/api/payments/create-order',
+        `${API_URL}/api/payments/create-order`,
         {},
         { withCredentials: true }
       );
@@ -22,7 +24,7 @@ function PaymentButton() {
           const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
           try {
             await axios.post(
-              "http://localhost:3000/api/payments/verify",
+              `${API_URL}/api/payments/verify`,
               {
                 razorpayOrderId: razorpay_order_id,
                 razorpayPaymentId: razorpay_payment_id,
@@ -32,7 +34,7 @@ function PaymentButton() {
             );
 
             toast.success("Payment successful!");
-            window.location.href = `http://localhost:3000/api/payments/receipt/${razorpay_payment_id}`;
+            window.location.href = `${API_URL}/api/payments/receipt/${razorpay_payment_id}`;
           } catch (err) {
             console.error(err?.response?.data || err.message);
             toast.error("Payment verification failed!");

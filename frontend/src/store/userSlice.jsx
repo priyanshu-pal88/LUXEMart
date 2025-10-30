@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 
 export const loginUser = createAsyncThunk(
@@ -10,7 +10,7 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       
-      const response = await axios.post("http://localhost:3000/api/auth/login",{email,password} ,{ withCredentials: true }  );
+      const response = await axios.post(`${API_URL}/api/auth/login`,{email,password} ,{ withCredentials: true }  );
       console.log(response.data.message)
 
       if (!response.data.user) {
@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk(
     "user/logoutUser",
     async (_, { rejectWithValue }) => {
       try {
-        const response = await axios.post("http://localhost:3000/api/auth/logout",{}, { withCredentials: true });
+        const response = await axios.post(`${API_URL}/api/auth/logout`,{}, { withCredentials: true });
         console.log(response.data.message);
         return response.data.message;
       } catch (error) {
@@ -43,7 +43,7 @@ export const getUserInfo = createAsyncThunk(
   'user/getUser',
   async(_,{rejectWithValue})=>{
     try{
-     const response = await axios.get("http://localhost:3000/api/auth/verify",{withCredentials : true})
+     const response = await axios.get(`${API_URL}/api/auth/verify`,{withCredentials : true})
      console.log(response)
      return response.data.user
     }
@@ -57,7 +57,7 @@ export const editUserInfo = createAsyncThunk(
   "user/editUser",
   async({firstname,lastname,email},{rejectWithValue }) =>{
     try{
-     const response = await axios.patch("http://localhost:3000/api/auth/edit-user",{fullname:{firstname,lastname},email},{withCredentials:true})
+     const response = await axios.patch(`${API_URL}/api/auth/edit-user`,{fullname:{firstname,lastname},email},{withCredentials:true})
       return response.data.user
     }
     catch(err){

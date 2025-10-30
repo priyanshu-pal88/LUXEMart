@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
-
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 
 export const getProducts = createAsyncThunk(
@@ -10,7 +9,7 @@ export const getProducts = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
 
-            const response = await axios.get("http://localhost:3000/api/products", { withCredentials: true });
+            const response = await axios.get(`${API_URL}/api/products`, { withCredentials: true });
             console.log(response.data.message)
             return response.data.products;
         } catch (error) {
@@ -24,7 +23,7 @@ export const getCategoryProducts = createAsyncThunk(
    async ({category}, { rejectWithValue }) => {
         try {
 
-            const response = await axios.get(`http://localhost:3000/api/products/get-item/${category}`, { withCredentials: true });
+            const response = await axios.get(`${API_URL}/api/products/get-item/${category}`, { withCredentials: true });
             console.log(response.data.message)
             return response.data.product;
         } catch (error) {
@@ -37,7 +36,7 @@ export const getFeaturedProducts = createAsyncThunk(
     "product/getFeaturedProducts",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("http://localhost:3000/api/products/featured", { withCredentials: true });
+            const response = await axios.get(`${API_URL}/api/products/featured`, { withCredentials: true });
             console.log(response.data.message)
             return response.data.products;
         } catch (error) {

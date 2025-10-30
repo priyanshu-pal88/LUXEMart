@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export const addToCart = createAsyncThunk(
     "cart/addToCart",
     async ({ productId, quantity }, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/cart/add-to-cart", { productId, quantity }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/api/cart/add-to-cart`, { productId, quantity }, { withCredentials: true })
             console.log(response.data.message)
             return response.data.cart;
         }
@@ -21,7 +22,7 @@ export const getCart = createAsyncThunk(
     "cart/getCart",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get("http://localhost:3000/api/cart", { withCredentials: true })
+            const response = await axios.get(`${API_URL}/api/cart`, { withCredentials: true })
             const cp = response.data?.cartProducts
             const cart = Array.isArray(cp) ? cp[0] : cp
 
@@ -37,7 +38,7 @@ export const increaseQuantity = createAsyncThunk(
     "cart/increaseQuantity",
     async ({ productId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/cart/add-to-cart", { productId, quantity: 1 }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/api/cart/add-to-cart`, { productId, quantity: 1 }, { withCredentials: true })
             console.log(response.data.message)
             console.log(response.data.cart.products)
             return response.data.cart.products;
@@ -51,7 +52,7 @@ export const decreaseQuantity = createAsyncThunk(
     "cart/decreaseQuantity",
     async ({ productId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/cart/decrease-cart", { productId }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/api/cart/decrease-cart`, { productId }, { withCredentials: true })
             console.log(response.data.message)
             return response.data.cart.products;
         }
@@ -65,7 +66,7 @@ export const removeFromCart = createAsyncThunk(
     "cart/removeFromCart",
     async ({ productId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:3000/api/cart/remove-cart", { productId }, { withCredentials: true })
+            const response = await axios.post(`${API_URL}/api/cart/remove-cart`, { productId }, { withCredentials: true })
             console.log(response.data.message)
             return response.data.cart.products;
         }
