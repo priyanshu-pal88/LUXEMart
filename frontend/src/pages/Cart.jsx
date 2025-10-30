@@ -93,14 +93,16 @@ const Cart = () => {
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-4 mb-10 fade-in">
-          <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center">
-            <i className="ri-shopping-cart-line text-2xl text-white"></i>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-10 fade-in">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center">
+              <i className="ri-shopping-cart-line text-2xl text-white"></i>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold">
+              <span className="text-white">Shopping</span>
+              <span className="rose-gold-text"> Cart</span>
+            </h1>
           </div>
-          <h1 className="text-4xl font-bold">
-            <span className="text-white">Shopping</span>
-            <span className="rose-gold-text"> Cart</span>
-          </h1>
           <span className="premium-badge text-white text-sm px-4 py-2 rounded-xl">
             {items.length} {items.length === 1 ? 'item' : 'items'}
           </span>
@@ -115,9 +117,9 @@ const Cart = () => {
 
               return (
                 <div key={item._id} className="glass-card rounded-2xl overflow-hidden">
-                  <div className="flex gap-6 p-6">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 p-4 sm:p-6">
                     {/* Product Image */}
-                    <div className="w-36 h-36 flex-shrink-0 bg-black/30 rounded-xl overflow-hidden relative">
+                    <div className="w-full sm:w-36 h-48 sm:h-36 flex-shrink-0 bg-black/30 rounded-xl overflow-hidden relative">
                       <img 
                         src={p?.images} 
                         alt={p?.title}
@@ -131,44 +133,46 @@ const Cart = () => {
                     {/* Product Details */}
                     <div className="flex-1 space-y-4">
                       <div>
-                        <h3 className="font-bold text-white text-xl line-clamp-1">{p?.title || "Product"}</h3>
+                        <h3 className="font-bold text-white text-lg sm:text-xl line-clamp-2">{p?.title || "Product"}</h3>
                         <p className="text-sm text-gray-400 line-clamp-2 mt-1">{p?.description || ""}</p>
                       </div>
 
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                         <span className="text-gray-400 text-sm font-semibold uppercase tracking-wide">Qty</span>
-                        <button 
-                          onClick={() => decreaseQuanty(productId)}
-                          className="w-10 h-10 flex items-center justify-center glass-card rounded-lg hover:bg-white/10 transition text-pink-400 font-bold"
-                          aria-label="Decrease quantity"
-                        >
-                          <i className="ri-subtract-line"></i>
-                        </button>
-                        <span className="w-14 text-center font-bold text-white text-lg">{item.quantity}</span>
-                        <button 
-                          onClick={() => increaseQuanty(productId, item.quantity)}
-                          disabled={item.quantity >= MAX_QUANTITY}
-                          className={`w-10 h-10 flex items-center justify-center glass-card rounded-lg transition text-pink-400 font-bold ${
-                            item.quantity >= MAX_QUANTITY ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
-                          }`}
-                          aria-label="Increase quantity"
-                        >
-                          <i className="ri-add-line"></i>
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button 
+                            onClick={() => decreaseQuanty(productId)}
+                            className="w-10 h-10 flex items-center justify-center glass-card rounded-lg hover:bg-white/10 transition text-pink-400 font-bold"
+                            aria-label="Decrease quantity"
+                          >
+                            <i className="ri-subtract-line"></i>
+                          </button>
+                          <span className="w-12 text-center font-bold text-white text-lg">{item.quantity}</span>
+                          <button 
+                            onClick={() => increaseQuanty(productId, item.quantity)}
+                            disabled={item.quantity >= MAX_QUANTITY}
+                            className={`w-10 h-10 flex items-center justify-center glass-card rounded-lg transition text-pink-400 font-bold ${
+                              item.quantity >= MAX_QUANTITY ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/10'
+                            }`}
+                            aria-label="Increase quantity"
+                          >
+                            <i className="ri-add-line"></i>
+                          </button>
+                        </div>
                         {item.quantity >= MAX_QUANTITY && (
                           <span className="text-xs text-pink-400">Max limit</span>
                         )}
                       </div>
 
                       {/* Price and Actions */}
-                      <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                        <span className="text-3xl font-bold rose-gold-text">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-white/10">
+                        <span className="text-2xl sm:text-3xl font-bold rose-gold-text">
                           ₹{p?.price?.amount}
                         </span>
                         <button 
                           onClick={() => removeCart(productId)}
-                          className="flex items-center gap-2 px-4 py-2 glass-card rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 font-medium transition"
+                          className="flex items-center gap-2 px-4 py-2 glass-card rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 font-medium transition text-sm sm:text-base"
                         >
                           <i className="ri-delete-bin-line"></i>
                           Remove
@@ -183,26 +187,26 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="glass-card rounded-2xl p-8 sticky top-20 space-y-6">
-              <h2 className="text-2xl font-bold rose-gold-text flex items-center gap-2">
+            <div className="glass-card rounded-2xl p-6 sm:p-8 lg:sticky lg:top-20 space-y-6">
+              <h2 className="text-xl sm:text-2xl font-bold rose-gold-text flex items-center gap-2">
                 <i className="ri-file-list-3-line"></i>
                 Order Summary
               </h2>
               
               <div className="space-y-4 pt-6 border-t border-white/10">
                 <div className="flex justify-between text-gray-300">
-                  <span className="font-medium">Subtotal</span>
-                  <span className="font-semibold text-white">₹{calculateTotal()}</span>
+                  <span className="font-medium text-sm sm:text-base">Subtotal</span>
+                  <span className="font-semibold text-white text-sm sm:text-base">₹{calculateTotal()}</span>
                 </div>
                 <div className="flex justify-between text-gray-300">
-                  <span className="font-medium">Shipping</span>
-                  <span className="font-semibold text-pink-400">Free</span>
+                  <span className="font-medium text-sm sm:text-base">Shipping</span>
+                  <span className="font-semibold text-pink-400 text-sm sm:text-base">Free</span>
                 </div>
               </div>
 
-              <div className="flex justify-between text-xl font-bold pt-6 border-t border-white/10">
+              <div className="flex justify-between text-lg sm:text-xl font-bold pt-6 border-t border-white/10">
                 <span className="text-white">Total</span>
-                <span className="text-3xl rose-gold-text">₹{calculateTotal()}</span>
+                <span className="text-2xl sm:text-3xl rose-gold-text">₹{calculateTotal()}</span>
               </div>
 
               <Suspense fallback={

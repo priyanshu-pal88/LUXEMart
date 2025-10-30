@@ -13,11 +13,11 @@ const NavBar = () => {
             <div className='w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform'>
               <img src="/logo.png" alt="LUXEMart" className="w-full h-full object-contain" />
             </div>
-            <span className='text-2xl font-bold rose-gold-text'>LUXEMart</span>
+            <span className='text-2xl font-bold rose-gold-text hidden sm:block'>LUXEMart</span>
           </NavLink>
 
           {/* Nav Links */}
-          <div className='flex items-center gap-8'>
+          <div className='flex items-center gap-3 sm:gap-8'>
             <NavLink 
               to="/" 
               className={({ isActive }) => 
@@ -29,7 +29,7 @@ const NavBar = () => {
               }
             >
               <i className="ri-home-5-line text-xl"></i>
-              <span>Home</span>
+              <span className="hidden md:inline">Home</span>
             </NavLink>
 
             {isAuthenticated ? (
@@ -45,7 +45,7 @@ const NavBar = () => {
                   }
                 >
                   <i className="ri-shopping-cart-line text-xl"></i>
-                  <span>Cart</span>
+                  <span className="hidden md:inline">Cart</span>
                 </NavLink>
                 <NavLink 
                   to="/user-profile" 
@@ -58,7 +58,7 @@ const NavBar = () => {
                   }
                 >
                   <i className="ri-user-line text-xl"></i>
-                  <span>Profile</span>
+                  <span className="hidden md:inline">Profile</span>
                 </NavLink>
               </>
             ) : (
@@ -74,11 +74,11 @@ const NavBar = () => {
                   }
                 >
                   <i className="ri-login-box-line text-xl"></i>
-                  <span>Sign In</span>
+                  <span className="hidden sm:inline">Sign In</span>
                 </NavLink>
                 <NavLink 
                   to="/register" 
-                  className='luxury-btn text-white px-6 py-2.5 rounded-xl font-bold tracking-wide'
+                  className='luxury-btn text-white px-4 sm:px-6 py-2.5 rounded-xl font-bold tracking-wide text-sm sm:text-base'
                 >
                   Sign Up
                 </NavLink>
