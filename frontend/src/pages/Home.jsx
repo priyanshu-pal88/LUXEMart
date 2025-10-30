@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getCategoryProducts, getProducts, getFeaturedProducts } from '../store/productSlice';
+import { getCategoryProducts, getProducts, getFeaturedProducts, clearProducts } from '../store/productSlice';
 import { addToCart } from '../store/cartSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
@@ -15,11 +15,12 @@ const categories = [
 ];
 
 const Home = () => {
-  const {products,featuredProducts,loading,error} = useSelector((state) => state.productReducer);
+  const {products,featuredProducts,loading,error,lastCategoryFetched} = useSelector((state) => state.productReducer);
   const { isAuthenticated } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [featuredLoaded, setFeaturedLoaded] = useState(false);
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,11 +32,25 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch featured products when component mounts
-    if (isAuthenticated && !selected) {
+    // Fetch featured products only once when authenticated and not already loaded
+    if (isAuthenticated && !selected && !featuredLoaded && featuredProducts.length === 0) {
       dispatch(getFeaturedProducts());
+      setFeaturedLoaded(true);
     }
-  }, [dispatch, isAuthenticated, selected]);
+  }, [dispatch, isAuthenticated, selected, featuredLoaded, featuredProducts.length]);
+
+  const onCategoryClick = (value) => {
+    // Only fetch if selecting a different category
+    if (selected !== value) {
+      setSelected(value);
+      dispatch(getCategoryProducts({category:value}));
+    }
+  };
+
+  const handleBackToCategories = () => {
+    setSelected(null);
+    dispatch(clearProducts());
+  };
 
   const cartHandler = async(productId) => {
     if (!isAuthenticated) {
@@ -66,11 +81,6 @@ const Home = () => {
     }
 
   }
-
-  const onCategoryClick = (value) => {
-    setSelected(value);
-    dispatch(getCategoryProducts({category:value}));
-  };
 
   if (initialLoading) {
     return <LoadingPage />;
@@ -263,7 +273,7 @@ const Home = () => {
             <div className="glass-card p-6 rounded-2xl flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button 
-                  onClick={() => setSelected(null)} 
+                  onClick={handleBackToCategories} 
                   className="w-12 h-12 glass-card rounded-xl hover:bg-white/10 transition flex items-center justify-center"
                   aria-label="Back to categories"
                 >

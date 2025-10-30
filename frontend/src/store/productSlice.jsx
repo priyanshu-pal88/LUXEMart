@@ -51,9 +51,14 @@ const productSlice = createSlice({
         products: [],
         featuredProducts: [],
         loading: false,
-        error: null
+        error: null,
+        lastCategoryFetched: null
     },
     reducers: {
+        clearProducts: (state) => {
+            state.products = [];
+            state.lastCategoryFetched = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -98,6 +103,6 @@ const productSlice = createSlice({
 }
 )
 
-
+export const { clearProducts } = productSlice.actions;
 
 export default productSlice.reducer;

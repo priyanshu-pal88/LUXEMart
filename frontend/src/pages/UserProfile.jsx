@@ -9,6 +9,7 @@ const UserProfile = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [edit, setEdit] = useState(false)
+  const [profileLoaded, setProfileLoaded] = useState(false)
   const { userInfo, isAuthenticated, loading, error } = useSelector((state) => state.userReducer)
   const { register, reset, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -19,10 +20,12 @@ const UserProfile = () => {
   })
 
   useEffect(() => {
-    if (!userInfo) {
+    // Fetch user info only once if not already loaded
+    if (!userInfo && !profileLoaded) {
       dispatch(getUserInfo())
+      setProfileLoaded(true)
     }
-  }, [dispatch, userInfo])
+  }, [dispatch, userInfo, profileLoaded])
 
   useEffect(() => {
     if (userInfo) {

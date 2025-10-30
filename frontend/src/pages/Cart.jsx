@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, lazy, Suspense } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { decreaseQuantity, getCart, removeFromCart } from "../store/cartSlice"
 import { increaseQuantity } from "../store/cartSlice"
-import PaymentButton from "../components/PaymentButton"
 import { useNavigate } from "react-router-dom"
+
+// Lazy load payment button component
+const PaymentButton = lazy(() => import("../components/PaymentButton"))
 
 const Cart = () => {
   const { cartItems, loading } = useSelector((state) => state.cartReducer)
   const { isAuthenticated } = useSelector((state) => state.userReducer)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [cartLoaded, setCartLoaded] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login')
       return
     }
-    dispatch(getCart())
-  }, [isAuthenticated, dispatch, navigate])
+    // Fetch cart only once when component mounts and user is authenticated
+    if (!cartLoaded) {
+      dispatch(getCart())
+      setCartLoaded(true)
+    }
+  }, [isAuthenticated, dispatch, navigate, cartLoaded])
 
   const items = Array.isArray(cartItems) ? cartItems : (cartItems?.products || [])
   
@@ -198,7 +205,13 @@ const Cart = () => {
                 <span className="text-3xl rose-gold-text">₹{calculateTotal()}</span>
               </div>
 
-              <PaymentButton />
+              <Suspense fallback={
+                <div className="w-full py-4 text-center">
+                  <i className="ri-loader-4-line text-2xl text-pink-500 animate-spin"></i>
+                </div>
+              }>
+                <PaymentButton />
+              </Suspense>
               
               <button 
                 onClick={() => navigate('/')}
