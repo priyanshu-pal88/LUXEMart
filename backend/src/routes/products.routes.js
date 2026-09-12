@@ -7,9 +7,9 @@ const { createProduct, getProducts,  getCategoryProduct, bulkUploadProducts, get
 const productRouter = express.Router()
 
 productRouter.get('/',authMiddleware,getProducts )
-productRouter.get('/featured',authMiddleware,getFeaturedProducts )
+productRouter.get('/featured',getFeaturedProducts )
 productRouter.post('/create-item', createProduct )
-productRouter.get('/get-item/:category',authMiddleware,getCategoryProduct )
+productRouter.get('/get-item/:category',getCategoryProduct )
 productRouter.patch('/update-item/:id',authMiddleware, )
 productRouter.post('/bulk',bulkUploadProducts)
 
